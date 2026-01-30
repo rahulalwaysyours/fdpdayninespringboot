@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -106,5 +107,28 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
+
+    //==== ADDED PAGINATION ===
     
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Post>> getPostsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author
+    ) {
+
+        Page<Post> result = postService.getPostsWithPagination(
+                page,
+                size,
+                sortBy,
+                direction,
+                title,
+                author
+        );
+
+        return ResponseEntity.ok(result);
+    }
 }

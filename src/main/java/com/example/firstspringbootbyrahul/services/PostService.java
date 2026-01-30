@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import com.example.firstspringbootbyrahul.entities.Post;
 import com.example.firstspringbootbyrahul.repositories.PostRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 @Service
 public class PostService {
 
@@ -86,5 +91,37 @@ public class PostService {
     // Check if exists
     public boolean existsById(Long id) {
         return postRepository.existsById(id);
+    }
+
+    //==== ADDING PAGINATION ====
+    // What this does:
+    // Creates pagination + sorting
+    // Applies only one filter at a time
+    // Falls back to findAll(pageable) if no filter is provided
+
+    public Page<Post> getPostsWithPagination(
+            int page,
+            int size,
+            String sortBy,
+            String direction,
+            String title,
+            String author
+    ) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        if (title != null && !title.isBlank()) {
+            return postRepository.findByTitleContainingIgnoreCase(title, pageable);
+        }
+
+        if (author != null && !author.isBlank()) {
+            return postRepository.findByAuthor(author, pageable);
+        }
+
+        return postRepository.findAll(pageable);
     }
 }
