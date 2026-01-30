@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "spring.application.datasource.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.application.datasource.url'"
+  },
+  {
+    "name": "spring.datasource.hikari.maxmimum-pool-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.hikari.maxmimum-pool-size'"
+  }
+]}
